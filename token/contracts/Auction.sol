@@ -37,7 +37,9 @@ contract Auction {
     }
 
 
-    mapping(address => uint) public ownerToBidAmount;
+    //a mapping of the addresses to how much they bid
+    mapping (address => uint) public ownerToBidAmount;
+    
 
     //this function must be public therefore each user should withdraw their bid
     //themselves because iterating over the mapping would drastically increase gas cost
@@ -73,6 +75,4 @@ contract Auction {
         host.transfer(highestBid);
 
     }
-
-
 }
