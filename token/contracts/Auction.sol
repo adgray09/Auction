@@ -2,13 +2,11 @@
 pragma solidity ^0.7.0;
 
 contract Auction {
-    
-    address payable public beneficiary;
+
+    address payable public host;
     address public highestBidder;
     uint public auctionEndTime;
     uint public highestBid;
-
-    mapping(address => uint) pendingReturns;
 
     // Boolean that shows auction has ended 
     bool ended;
@@ -19,9 +17,9 @@ contract Auction {
 
     constructor(
         uint _biddingTime,
-        address payable _beneficiary
+        address payable _host
     ) {
-        beneficiary = _beneficiary;
+        host = _host;
         auctionEndTime = block.timestamp + _biddingTime;
     }
     
@@ -33,15 +31,45 @@ contract Auction {
         // Checking if their bid is higher than the highest
         require(msg.value > highestBid, "There already is a higher bid."
         );
-
-        if (highestBid != 0) {
-            pendingReturns[highestBidder] += highestBid;
-        }
-        // Keeping track of highest bidder
-        highestBidder = msg.sender;
-        // Value of the highest bid
-        highestBid = msg.value;
-        // Event for bid increasing with the sender and their value
-        emit HighestBidIncreased(msg.sender, msg.value, "New Highest Bidder");
     }
+
+
+    mapping(address => uint) public ownerToBidAmount;
+
+    //this function must be public therefore each user should withdraw their bid
+    //themselves because iterating over the mapping would drastically increase gas cost
+    function withdraw() public returns (bool) {
+        //get how much they had bid
+        uint bidAmount = ownerToBidAmount[msg.sender];
+
+        //set their bid amount in our mapping to be 0
+        ownerToBidAmount[msg.sender] = 0;
+
+        //send the address the amount back
+        if (!msg.sender.send(bidAmount)) {
+            //if the send failed for some reason return false
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    //function to end the auction and send the person who started it the highest bid
+    function auctionEnded() public {
+        require(block.timestamp >= auctionEndTime, "Auction has not ended yet");
+        require(!ended, "The auction is still going on");
+
+        //mark the current auction as ended
+        ended = true;
+
+        //emit the auction ended event
+        emit AuctionEnded(highestBidder, highestBid);
+
+        //transer the highest bid to the host
+        host.transfer(highestBid);
+
+    }
+
+
 }
