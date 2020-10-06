@@ -7,20 +7,23 @@ contract Auction {
     address public highestBidder;
     uint public auctionEndTime;
     uint public highestBid;
+    string public item;
 
     // Boolean that shows auction has ended 
     bool ended;
 
    // Events handled during auction  
     event HighestBidIncreased(address bidder, uint amount, string message);
-    event AuctionEnded(address winner, uint amount);
+    event AuctionEnded(address winner, uint amount, string item);
 
     constructor(
         uint _biddingTime,
-        address payable _host
+        address payable _host,
+        string memory _item
     ) {
         host = _host;
         auctionEndTime = block.timestamp + _biddingTime;
+        item = _item;
     }
     
     function bid() public payable {
@@ -35,6 +38,7 @@ contract Auction {
 
     //a mapping of the addresses to how much they bid
     mapping (address => uint) public ownerToBidAmount;
+
     
 
     //this function must be public therefore each user should withdraw their bid
@@ -65,12 +69,10 @@ contract Auction {
         ended = true;
 
         //emit the auction ended event
-        emit AuctionEnded(highestBidder, highestBid);
+        emit AuctionEnded(highestBidder, highestBid, item);
 
         //transer the highest bid to the host
         host.transfer(highestBid);
 
     }
-
-
 }
