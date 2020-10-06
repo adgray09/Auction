@@ -1,16 +1,41 @@
 // SPDX-License-Identifier: UNLICENSED
-
 pragma solidity ^0.7.0;
 
 contract Auction {
 
     address payable public host;
     address public highestBidder;
-    uint public HighestBid;
-    uint public auctionEndtime; 
+    uint public auctionEndTime;
+    uint public highestBid;
 
 
-    mapping (uint => address) public ownerToBidAmount
+    // Boolean that shows auction has ended 
+    bool ended;
+
+   // Events handled during auction  
+    event HighestBidIncreased(address bidder, uint amount, string message);
+    event AuctionEnded(address winner, uint amount);
+
+    constructor(
+        uint _biddingTime,
+        address payable _host
+    ) {
+        host = _host;
+        auctionEndTime = block.timestamp + _biddingTime;
+    }
+    
+    function bid() public payable {
+        require(msg.value > 0, "Value must be higher than 0");
+        // Checking if there is still time in auction
+        require(block.timestamp <= auctionEndTime,"Auction already ended."
+        );
+        // Checking if their bid is higher than the highest
+        require(msg.value > highestBid, "There already is a higher bid."
+        );
+
+
+    //a mapping of the addresses to how much they bid
+    mapping (address => uint) public ownerToBidAmount
 
 
     //this function must be public therefore each user should withdraw their bid
@@ -23,7 +48,7 @@ contract Auction {
         ownerToBidAmount[msg.sender] = 0;
 
         //send the address the amount back
-        if (!msg.sender.send(amount)) {
+        if (!msg.sender.send(bidAmount)) {
             //if the send failed for some reason return false
             return false;
         }
@@ -44,9 +69,8 @@ contract Auction {
         emit auctionEnded(highestBidder, HighestBid);
 
         //transer the highest bid to the host
-        host.transer(HighestBid);
+        host.transfer(HighestBid);
 
     }
-
 
 }
