@@ -31,11 +31,11 @@ contract Auction {
         // Checking if their bid is higher than the highest
         require(msg.value > highestBid, "There already is a higher bid."
         );
-
+    }
 
     //a mapping of the addresses to how much they bid
-    mapping (address => uint) public ownerToBidAmount
-    }
+    mapping (address => uint) public ownerToBidAmount;
+    
 
     //this function must be public therefore each user should withdraw their bid
     //themselves because iterating over the mapping would drastically increase gas cost
@@ -68,7 +68,7 @@ contract Auction {
         emit AuctionEnded(highestBidder, highestBid);
 
         //transer the highest bid to the host
-        host.transfer(HighestBid);
+        host.transfer(highestBid);
 
     }
 
