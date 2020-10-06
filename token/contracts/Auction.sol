@@ -36,9 +36,9 @@ contract Auction {
         );
     }
 
-
     //a mapping of the addresses to how much they bid
-    mapping (address => uint) ownerToBidAmount;
+    mapping (address => uint) public ownerToBidAmount;
+
     
 
     //this function must be public therefore each user should withdraw their bid
