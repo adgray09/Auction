@@ -8,7 +8,6 @@ contract Auction {
     uint public auctionEndTime;
     uint public highestBid;
 
-
     // Boolean that shows auction has ended 
     bool ended;
 
@@ -36,7 +35,7 @@ contract Auction {
 
     //a mapping of the addresses to how much they bid
     mapping (address => uint) public ownerToBidAmount
-
+    }
 
     //this function must be public therefore each user should withdraw their bid
     //themselves because iterating over the mapping would drastically increase gas cost
@@ -66,11 +65,12 @@ contract Auction {
         ended = true;
 
         //emit the auction ended event
-        emit auctionEnded(highestBidder, HighestBid);
+        emit AuctionEnded(highestBidder, highestBid);
 
         //transer the highest bid to the host
         host.transfer(HighestBid);
 
     }
+
 
 }
