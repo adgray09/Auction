@@ -16,13 +16,7 @@ contract Auction {
     event AuctionEnded(address winner, uint amount, string item);
     event AuctionStarted(address host, string item);
 
-    constructor(
-        address payable _host,
-        string memory _item
-    ) {
-        host = _host;
-        item = _item;
-    }
+    
 
 
     function startAuction(string memory _itemToAuction) public {
@@ -32,17 +26,17 @@ contract Auction {
     }
 
     
-    function bid() public payable {
-        require(msg.value > 0, "Value must be higher than 0");
+    function bid(uint bidAmount) public payable {
+        require(bidAmount > 0, "Value must be higher than 0");
 
         // Checking if there the auction is still going on
         require(!ended);
         // Checking if their bid is higher than the highest
-        require(msg.value > highestBid, "There already is a higher bid.");
+        require(bidAmount > highestBid, "There already is a higher bid.");
 
-        highestBid = msg.value;
+        highestBid = bidAmount;
         highestBidder = msg.sender;
-        emit HighestBidIncreased(msg.sender, msg.value, "New Highest Bid");
+        emit HighestBidIncreased(msg.sender, bidAmount, "New Highest Bid");
 
     }
 

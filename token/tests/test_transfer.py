@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import brownie
+import pytest
 
 
 def test_sender_balance_decreases(accounts, token):
@@ -78,3 +79,6 @@ def test_transfer_event_fires(accounts, token):
 
     assert len(tx.events) == 1
     assert tx.events["Transfer"].values() == [accounts[0], accounts[1], amount]
+
+def token(Token, accounts):
+    return Token.deploy("Test Token", "TST", 18, 10**21, {'from': accounts[0]})
