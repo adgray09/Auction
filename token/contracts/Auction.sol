@@ -9,7 +9,7 @@ contract Auction {
     string public item;
 
     // Boolean that shows auction has ended
-    bool ended;
+    bool public ended;
 
    // Events handled during auction  
     event HighestBidIncreased(address bidder, uint amount, string message);
@@ -25,17 +25,17 @@ contract Auction {
     }
 
     
-    function bid(uint bidAmount) public payable {
-        require(bidAmount > 0, "Value must be higher than 0");
+    function bid() public payable {
+        require(msg.value > 0, "Value must be higher than 0");
 
         // Checking if there the auction is still going on
         require(!ended);
         // Checking if their bid is higher than the highest
-        require(bidAmount > highestBid, "There already is a higher bid.");
+        require(msg.value > highestBid, "There already is a higher bid.");
 
-        highestBid = bidAmount;
+        highestBid = msg.value;
         highestBidder = msg.sender;
-        emit HighestBidIncreased(msg.sender, bidAmount, "New Highest Bid");
+        emit HighestBidIncreased(msg.sender, msg.value, "New Highest Bid");
 
     }
 
@@ -74,8 +74,6 @@ contract Auction {
 
         highestBid = 0;
         item = "";
-        highestBidder = 0x0;
-        host = 0x0;
 
 
         //emit the auction ended event

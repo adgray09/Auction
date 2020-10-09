@@ -1,47 +1,14 @@
 {
   "contracts": {
-    "Auction": "467916117fd8871c6ab967daf5b20fd91382964b",
-    "SafeMath": "3b4158955f564edb18bd7a8ffdb49859c904f0b7",
-    "Token": "ac1c0a6798f50e64a9f1d30063e09b47b8c7afa9"
+    "Auction": "bff19ba07cd9926aada5c450540d8cb3b94f8646",
+    "SafeMath": "3b4158955f564edb18bd7a8ffdb49859c904f0b7"
   },
   "tests": {
-    "tests/test_approve.py": {
-      "coverage": false,
-      "isolated": [
-        "SafeMath",
-        "Token"
-      ],
-      "results": "............",
-      "sha1": "e04c89e42f62f0d9846ee8c1c7eda58ab0d2754c",
-      "txhash": []
-    },
     "tests/test_auction.py": {
       "coverage": false,
-      "isolated": [
-        "Auction"
-      ],
-      "results": ".",
-      "sha1": "d715d61a4c4a7b89d80410444fe3fabdb6942a3a",
-      "txhash": []
-    },
-    "tests/test_transfer.py": {
-      "coverage": false,
-      "isolated": [
-        "SafeMath",
-        "Token"
-      ],
-      "results": ".........",
-      "sha1": "191847685320ddb72f4483c33ef59475cb811d58",
-      "txhash": []
-    },
-    "tests/test_transferFrom.py": {
-      "coverage": false,
-      "isolated": [
-        "SafeMath",
-        "Token"
-      ],
-      "results": ".................",
-      "sha1": "879a4f506b1f221c2c9e9dca866ea5131d482385",
+      "isolated": false,
+      "results": "...",
+      "sha1": "24fd79b398f50f79f43d42068baf911181ce596d",
       "txhash": []
     }
   },
