@@ -5,35 +5,45 @@ contract Auction {
 
     address payable public host;
     address public highestBidder;
-    uint public auctionEndTime;
     uint public highestBid;
     string public item;
 
-    // Boolean that shows auction has ended 
+    // Boolean that shows auction has ended
     bool ended;
 
    // Events handled during auction  
     event HighestBidIncreased(address bidder, uint amount, string message);
     event AuctionEnded(address winner, uint amount, string item);
+    event AuctionStarted(address host, string item);
 
     constructor(
-        uint _biddingTime,
         address payable _host,
         string memory _item
     ) {
         host = _host;
-        auctionEndTime = block.timestamp + _biddingTime;
         item = _item;
     }
+
+
+    function startAuction(string memory _itemToAuction) public {
+        host = msg.sender;
+        item = _itemToAuction;
+        emit AuctionStarted(host, _itemToAuction);
+    }
+
     
     function bid() public payable {
         require(msg.value > 0, "Value must be higher than 0");
-        // Checking if there is still time in auction
-        require(block.timestamp <= auctionEndTime,"Auction already ended."
-        );
+
+        // Checking if there the auction is still going on
+        require(!ended);
         // Checking if their bid is higher than the highest
-        require(msg.value > highestBid, "There already is a higher bid."
-        );
+        require(msg.value > highestBid, "There already is a higher bid.");
+
+        highestBid = msg.value;
+        highestBidder = msg.sender;
+        emit HighestBidIncreased(msg.sender, msg.value, "New Highest Bid");
+
     }
 
     //a mapping of the addresses to how much they bid
@@ -61,10 +71,11 @@ contract Auction {
     }
 
     //function to end the auction and send the person who started it the highest bid
-    function auctionEnded() public {
-        require(block.timestamp >= auctionEndTime, "Auction has not ended yet");
+    function endAuction() public {
         require(!ended, "The auction is still going on");
 
+        //the only user that can end the auction is the one that started it.
+        require(msg.sender == host);
         //mark the current auction as ended
         ended = true;
 
