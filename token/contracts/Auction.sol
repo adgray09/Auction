@@ -16,13 +16,7 @@ contract Auction {
     event AuctionEnded(address winner, uint amount, string item);
     event AuctionStarted(address host, string item);
 
-    constructor(
-        address payable _host,
-        string memory _item
-    ) {
-        host = _host;
-        item = _item;
-    }
+
 
 
     function startAuction(string memory _itemToAuction) public {
@@ -78,6 +72,12 @@ contract Auction {
         require(msg.sender == host);
         //mark the current auction as ended
         ended = true;
+
+        highestBid = 0;
+        item = "";
+        highestBidder = 0x0;
+        host = 0x0;
+
 
         //emit the auction ended event
         emit AuctionEnded(highestBidder, highestBid, item);
